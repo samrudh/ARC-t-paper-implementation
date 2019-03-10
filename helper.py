@@ -1,3 +1,6 @@
+import numpy as np
+import math
+
 def formKernel(X1, X2, gamma=None):
     return np.exp( np.subtract( np.matmul(X1,X2.T),1) )
 
