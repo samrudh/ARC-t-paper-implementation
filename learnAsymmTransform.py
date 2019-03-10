@@ -17,25 +17,6 @@ class Params():
 
 
 
-def getConstraints_InterdomainSimilarity(y1,y2,l,u):
-    pos = 1
-    ly1 = len(y1)
-    ly2 = len(y2)
-    C = np.zeros(ly1 * ly2, 4)
-
-    for i in range(ly1):
-        for j in range(ly2):
-            if y1[i] == y2[j]:
-                C[pos,:] =[i, j + ly1, u ,-1]
-            else:
-                C[pos,:]=[i ,j + ly1, l, 1]
-
-            pos = pos + 1
-
-    m = ly1 + ly2
-    indices = [x for x in range(m)]
-
-    return indices
 
 
 def learnAymmTransform(XA, yA, XB, yB, params):
@@ -50,7 +31,11 @@ def learnAymmTransform(XA, yA, XB, yB, params):
     ## Calculate lowe and upper thresholds
     l, u = helper.getKernelValueExtremes(K0train, 0.02, 0.98)
 
-    return getConstraints_InterdomainSimilarity(yA,yB,l,u)
+    C, indices = helper.getConstraints_InterdomainSimilarity(yA,yB,l,u)
+
+    # S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
+
+    return helper.asymmetricFrob_slack_kernel(K0train, C)
 
 
 
@@ -74,11 +59,11 @@ if __name__=='__main__':
 
     params = Params()
 
-    xA = np.random.rand(795,800)
-    xB = np.random.rand(498,800)
+    xA = np.random.rand(591,800)
+    xB = np.random.rand(93,800)
 
-    yA = np.array([1]*795)
-    yB = np.array([1] * 498)
+    yA = np.array([1]*591)
+    yB = np.array([1] * 93)
 
     print(learnAymmTransform(xA, yA, xB, yB, params))
 
