@@ -20,7 +20,9 @@ class Params():
 
 
 def learnAymmTransform(XA, yA, XB, yB, params):
-
+#    debug
+#    XA = xA
+#    XB = xB
     X = np.concatenate((XA, XB))
     y = np.concatenate((yA, yB))
 

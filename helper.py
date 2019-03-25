@@ -43,6 +43,10 @@ def getConstraints_InterdomainSimilarity(y1,y2,l,u):
 
 
 def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
+    
+#    debug
+#    K0,C = K0train, C
+    
     maxit = 2 #1000000
     n, _ = K0.shape
     S = np.zeros(K0.shape)
@@ -76,20 +80,38 @@ def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
         kx = K0[p1,:]
         ky = K0[:, p2]
 
-        # alpha = min(lambda1[curri], (s*(b - K0[p1, p2] - kx * S * ky) - slack[curri]) / (1 / gamma + K0[p1, p1] * K0[p2, p2]))
-        # lambda1[curri] = lambda1[curri] - alpha
-        # S[p1, p2] = S[p1, p2] + s * alpha
-        # slack[curri] = slack[curri] - alpha / gamma
-        # alpha2 = min(lambda2[curri], gamma * slack[curri])
-        # slack[curri] = slack[curri] - alpha2 / gamma
-        # lambda2[curri] = lambda2[curri] - alpha2
-        #
+#        zz = 
+        t1 = (s * (b - K0[p1, p2] - np.matmul(np.matmul(kx.T ,S), ky)) - slack[curri])
+        t2 = (1 / gamma + K0[p1, p1] * K0[p2, p2])
+        t = t1 / t2
+        alpha = min(lambda1[curri], t)
+        lambda1[curri] = lambda1[curri] - alpha
+        S[p1, p2] = S[p1, p2] + s * alpha
+        slack[curri] = slack[curri] - alpha / gamma
+        alpha2 = min(lambda2[curri], gamma * slack[curri])
+        slack[curri] = slack[curri] - alpha2 / gamma
+        lambda2[curri] = lambda2[curri] - alpha2
+        
+        zz =C[:, 3].T
         # # updat viols
-        # v = K0[C[:, 0], p1]
-        # w = K0[p2, C[:, 1]].T
-        # viol = viol + (s * alpha * C[:, 3].T) * ( K0[C[:,0],p1].T *( K0[p2, C[:, 1])
-        # viol[curri] = viol[curri] + (alpha + alpha2) / gamma
+        v = np.zeros([len(C), 1])
+        for x in range(C.shape[0]):
+             v [x,0]= K0[int(C[x, 0]), p1]
+             
+        w = np.zeros([1,len(C)])        
+        for x in range(C.shape[0]):
+             w [0,x]= K0[p2,int(C[x, 1])]
+        w=w.T
+             
+        zz = s*alpha*C[:,3]
+        zz = np.reshape(zz,[len(zz),1])
+        zz = zz.T
+        zz1 = np.multiply(zz,v.T)
+        zzz=np.multiply(zz1,w.T)
+  
+        viol = viol + zzz;
+        viol[0,curri-1] = viol[0,curri] + (alpha+alpha2)/gamma
 
-        return w
+    return S, slack
 
 
