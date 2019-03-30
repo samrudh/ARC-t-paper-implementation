@@ -50,27 +50,32 @@ def getConstraints_InterdomainSimilarity(y1,y2,l,u):
 def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
     
 #    debug
-    K0,C=K0, C 
+#    K0,C, gamma, thresh=K0train, C , 100, 0.01
 ##   debug
     
-    maxit = 2 #1000000
+    maxit = 10000
     n, _ = K0.shape
     S = np.zeros(K0.shape)
     c, t = C.shape
     slack = np.zeros([c, 1])
     lambda1 = np.zeros([c, 1])
     lambda2 = np.zeros([c, 1])
-
-    v = n*(C[:, 0] -1 ) + C[:,1]
-
+    
+    C[:,0] = np.array([int(x) for x in list(C[:,0])])
+    C[:,1] = np.array([int(x) for x in list(C[:,1])])
+    
+    v = n*(C[:, 0] ) + C[:,1]
+    v = np.array([int(x) for x in list(v)])
+    
     k0_flatten = np.ravel(K0)
     k0_new = [k0_flatten[abs(int(x))] for x in v]
     k0_new = np.array(k0_new)
     #
     viol = np.array(C[:,3] * ( k0_new - C[:,2] ))
-    viol = viol.T
+    viol.reshape([1, len(viol)])
 
     for i in range(maxit):
+        
         mx = max(viol)
         curri = np.argmax(viol)
         if not i%1000:
@@ -113,10 +118,10 @@ def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
         zz = np.reshape(zz,[len(zz),1])
         zz = zz.T
         zz1 = np.multiply(zz,v.T)
-        zzz=np.multiply(zz1,w.T)
+        zzz = np.multiply(zz1,w.T)
   
-        viol = viol + zzz;
-        viol[0,curri-1] = viol[0,curri] + (alpha+alpha2)/gamma
+        viol = viol + zzz[0];
+        viol[curri-1] = viol[curri] + (alpha+alpha2)/gamma
 
     return S, slack
 
