@@ -30,15 +30,7 @@ yB= matlab_inputs['in_yB']
 param = matlab_inputs['in_param']
 
 
-mat_file_path = r"knn_matlab_input_data.mat"
 
-matlab_inputs = sio.loadmat(mat_file_path)
-
-XA = matlab_inputs['in_XA']
-yA = matlab_inputs['in_yA']
-XB = matlab_inputs['in_XB']
-yB= matlab_inputs['in_yB']
-param = matlab_inputs['in_param']
 
 
     
@@ -61,7 +53,7 @@ S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 
 ## start coding from here
 ### use
-params.S = S
+#params.S = S
 Xlearn = X[indices,:]
 ###
 mat_file_path = r"knn_matlab_input_data.mat"
@@ -73,8 +65,8 @@ y1 = matlab_inputs['out_yA']
 X2 = matlab_inputs['out_XB']
 y2 = matlab_inputs['out_yB']
 
-
- asymmetricKNN(X1,y1,X2,y2,?);
+## KNN code Umesh
+# asymmetricKNN(X1,y1,X2,y2,?);
 
 
 

@@ -53,7 +53,7 @@ def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
 #    K0,C, gamma, thresh=K0train, C , 100, 0.01
 ##   debug
     
-    maxit = 10000
+    maxit = 1000
     n, _ = K0.shape
     S = np.zeros(K0.shape)
     c, t = C.shape
