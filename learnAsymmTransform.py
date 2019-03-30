@@ -6,9 +6,7 @@ Learning asymmetric transform
 import numpy as np
 import math
 import helper
-
-
-
+import asymmetricKNN;
 
 class Params():
     def __init__(self):
@@ -55,23 +53,33 @@ S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 ### use
 #params.S = S
 Xlearn = X[indices,:]
-###
-mat_file_path = r"knn_matlab_input_data.mat"
 
-matlab_inputs = sio.loadmat(mat_file_path)
+matlab_inputs_asymmetric = sio.loadmat(r"input_asymmetri_transform.mat")
+testexsA = matlab_inputs_asymmetric['testexsA']
+testexsB = matlab_inputs_asymmetric['testexsB']
+trexsA = matlab_inputs_asymmetric['trexsA']
+trexsB = matlab_inputs_asymmetric['trexsB']
+trknnA = matlab_inputs_asymmetric['trknnA']
 
-X1 = matlab_inputs['out_XA']
-y1 = matlab_inputs['out_yA']
-X2 = matlab_inputs['out_XB']
-y2 = matlab_inputs['out_yB']
+# Adjusting index by subtracting 1
+testexsB = [[y - 1 for y in x] for x in testexsB];
+trknnA = [[y - 1 for y in x] for x in trknnA];
+
+X1 = matlab_inputs_asymmetric['XA']
+y1 = matlab_inputs_asymmetric['yA'].reshape(-1)
+X2 = matlab_inputs_asymmetric['XB']
+y2 = matlab_inputs_asymmetric['yB'].reshape(-1)
 
 ## KNN code Umesh
-# asymmetricKNN(X1,y1,X2,y2,?);
+asymmetricKNN.asymmetricKNN(X1[trknnA],y1[trknnA],X2[testexsB],y2[testexsB],Xlearn,S,1);
 
-
-
-
-
+# Xtrain = X1[trknnA]
+# Ytrain= y1[trknnA]
+# Xtest = X2[testexsB];
+# Ytest = y2[testexsB];
+# s =S
+# k =1
+#
 
 
 
