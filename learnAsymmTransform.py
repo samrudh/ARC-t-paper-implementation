@@ -30,26 +30,51 @@ yB= matlab_inputs['in_yB']
 param = matlab_inputs['in_param']
 
 
-def learnAymmTransform(XA, yA, XB, yB, params):
+mat_file_path = r"knn_matlab_input_data.mat"
+
+matlab_inputs = sio.loadmat(mat_file_path)
+
+XA = matlab_inputs['in_XA']
+yA = matlab_inputs['in_yA']
+XB = matlab_inputs['in_XB']
+yB= matlab_inputs['in_yB']
+param = matlab_inputs['in_param']
+
+
     
     
     
-    X = np.concatenate((XA, XB), axis=0)
-    y = np.concatenate((yA, yB), axis=1)
+X = np.concatenate((XA, XB), axis=0)
+y = np.concatenate((yA, yB), axis=1)
 
 
-    ## Form kernel matrix
-    K0train = helper.formKernel(X, X)
+## Form kernel matrix
+K0train = helper.formKernel(X, X)
 
-    ## Calculate lowe and upper thresholds
-    l, u = helper.getKernelValueExtremes(K0train, 0.02, 0.98)
+## Calculate lowe and upper thresholds
+l, u = helper.getKernelValueExtremes(K0train, 0.02, 0.98)
 
-    C, indices = helper.getConstraints_InterdomainSimilarity(yA,yB,l,u)
+C, indices = helper.getConstraints_InterdomainSimilarity(yA,yB,l,u)
 
-    S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
+S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 
-    return S, slack
 
+## start coding from here
+### use
+params.S = S
+Xlearn = X[indices,:]
+###
+mat_file_path = r"knn_matlab_input_data.mat"
+
+matlab_inputs = sio.loadmat(mat_file_path)
+
+X1 = matlab_inputs['out_XA']
+y1 = matlab_inputs['out_yA']
+X2 = matlab_inputs['out_XB']
+y2 = matlab_inputs['out_yB']
+
+
+ asymmetricKNN(X1,y1,X2,y2,?);
 
 
 
