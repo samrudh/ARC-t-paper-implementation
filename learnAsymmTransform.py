@@ -7,6 +7,7 @@ import numpy as np
 import math
 import helper
 import asymmetricKNN;
+import symmetricKNN;
 
 class Params():
     def __init__(self):
@@ -63,6 +64,8 @@ y2 = matlab_inputs_knn['out_yB']
 ## KNN code Umesh
 asymmetricKNN.asymmetricKNN(X1,y1,X2,y2,Xlearn,S,1);
 
+##
+symmetricKNN.symmetricKNN(X1,y1,X2,y2,Xlearn,S,1);
 
 ## SVM code Samrudha
 ##asymmetricKNN.asymmetricSVM(X1,y1,X2,y2,Xlearn,S,1);
