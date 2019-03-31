@@ -17,25 +17,35 @@ class Params():
 
 import scipy.io as sio
 
-mat_file_path = r"matlab_input_data.mat"
+mat_file_path = r"matlab_input_combined.mat"
 
 matlab_inputs = sio.loadmat(mat_file_path)
 
-XA = matlab_inputs['in_XA']
-yA = matlab_inputs['in_yA']
-XB = matlab_inputs['in_XB']
-yB= matlab_inputs['in_yB']
-param = matlab_inputs['in_param']
+XA = matlab_inputs['XA']
+yA = matlab_inputs['yA'].reshape(-1)
+XB = matlab_inputs['XB']
+yB= matlab_inputs['yB'].reshape(-1)
+param = matlab_inputs['PARAM']
+trexsA = matlab_inputs['trexsA'].reshape(-1)
+trexsB = matlab_inputs['trexsB'].reshape(-1)
+
+trknnA = matlab_inputs['trknnA'].reshape(-1)
+testexsB = matlab_inputs['testexsB'].reshape(-1)
+
+# Adjusting index by subtracting 1
+trexsA = [x - 1 for x in trexsA]
+trexsB = [x - 1 for x in trexsB]
+trknnA = [x-1 for x in trknnA]
+testexsB = [x-1 for x in testexsB]
+
+XA_learn = XA[trexsA,:]
+yA_learn = yA[trexsA]
+XB_learn = XB[trexsB,:]
+yB_learn = yB[trexsB]
 
 
-
-
-
-    
-    
-    
-X = np.concatenate((XA, XB), axis=0)
-y = np.concatenate((yA, yB), axis=1)
+X = np.concatenate((XA_learn, XB_learn), axis=0)
+y = np.concatenate((yA_learn, yB_learn), axis=0)
 
 
 ## Form kernel matrix
@@ -44,7 +54,7 @@ K0train = helper.formKernel(X, X)
 ## Calculate lowe and upper thresholds
 l, u = helper.getKernelValueExtremes(K0train, 0.02, 0.98)
 
-C, indices = helper.getConstraints_InterdomainSimilarity(yA,yB,l,u)
+C, indices = helper.getConstraints_InterdomainSimilarity(yA_learn,yB_learn,l,u)
 
 S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 
@@ -54,32 +64,16 @@ S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 #params.S = S
 Xlearn = X[indices,:]
 
-matlab_inputs_asymmetric = sio.loadmat(r"input_asymmetri_transform.mat")
-testexsA = matlab_inputs_asymmetric['testexsA']
-testexsB = matlab_inputs_asymmetric['testexsB']
-trexsA = matlab_inputs_asymmetric['trexsA']
-trexsB = matlab_inputs_asymmetric['trexsB']
-trknnA = matlab_inputs_asymmetric['trknnA']
-
-# Adjusting index by subtracting 1
-testexsB = [[y - 1 for y in x] for x in testexsB];
-trknnA = [[y - 1 for y in x] for x in trknnA];
-
-X1 = matlab_inputs_asymmetric['XA']
-y1 = matlab_inputs_asymmetric['yA'].reshape(-1)
-X2 = matlab_inputs_asymmetric['XB']
-y2 = matlab_inputs_asymmetric['yB'].reshape(-1)
-
 ## KNN code Umesh
-asymmetricKNN.asymmetricKNN(X1[trknnA],y1[trknnA],X2[testexsB],y2[testexsB],Xlearn,S,1);
+asymmetricKNN.asymmetricKNN(XA[trknnA,:],yA[trknnA],XB[testexsB,:],yB[testexsB],Xlearn,S,1);
 
-# Xtrain = X1[trknnA]
-# Ytrain= y1[trknnA]
-# Xtest = X2[testexsB];
-# Ytest = y2[testexsB];
+# Xtrain = XA[trknnA,:]
+# Ytrain= yA[trknnA]
+# Xtest = XB[testexsB,:]
+# Ytest = yB[testexsB]
 # s =S
 # k =1
-#
+
 
 
 

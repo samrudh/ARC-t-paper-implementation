@@ -13,15 +13,15 @@ def kernelKNN (Ytrain, Ktrain_test, nKtrain, nKtest, k):
     # compute distance
     (rows, cols) = Ktrain_test.shape
     distMatrix = np.zeros((rows, cols), 'float64');
-    for i in range(0,rows-1):
-        for j in range(0,cols-1):
+    for i in range(0,rows):
+        for j in range(0,cols):
             distMatrix[i,j] = nKtest[i] + nKtrain[j] - 2 * Ktrain_test[i, j];
 
-    indices = np.argsort(distMatrix, axis=0);
-    preds = np.zeros(rows,"int64");
+    indices = np.argsort(distMatrix, axis=1);
+    preds = np.zeros(rows,"int");
 
     for i in range(0, rows):
-        counts = np.zeros(31);
+        counts = np.zeros(32);
         for j in range(0, k):
             if Ytrain[indices[i,j]] > np.count_nonzero(counts):
                 counts[Ytrain[indices[i,j]]] = 1;
@@ -46,9 +46,9 @@ def asymmetricKNN(Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k):
     Ktest_learn  = formKernel(Xtest, Xlearn)
     Ktrain_learn = formKernel(Xtrain, Xlearn)
     # @ is used for matrix multiplication
-    Ktrain_test = Ktrain_test + Ktrain_learn  @ s @ Ktest_learn.T
-    nKtest = np.ones((Xtest.shape[0],1), 'float64');
-    nKtrain = np.ones((Xtrain.shape[0],1), 'float64');
+    Ktrain_test = Ktrain_test + np.matmul(np.matmul(Ktrain_learn, s), Ktest_learn.T)
+    nKtest = np.ones(Xtest.shape[0], 'int');
+    nKtrain = np.ones(Xtrain.shape[0], 'int');
 
     # call knn
     predLabels = kernelKNN(Ytrain, Ktrain_test, nKtrain, nKtest, k);
