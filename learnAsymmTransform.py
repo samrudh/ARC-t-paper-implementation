@@ -67,6 +67,7 @@ Xlearn = X[indices,:]
 ## KNN code Umesh
 asymmetricKNN.asymmetricKNN(XA[trknnA,:],yA[trknnA],XB[testexsB,:],yB[testexsB],Xlearn,S,1);
 
+# For Debug purpose  only
 # Xtrain = XA[trknnA,:]
 # Ytrain= yA[trknnA]
 # Xtest = XB[testexsB,:]

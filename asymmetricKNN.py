@@ -57,22 +57,3 @@ def asymmetricKNN(Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k):
     acc  = numRight / len(predLabels);
     print ("Matching completed with accuracy of "+ str(acc*100) +" %")
     return acc;
-
-
-# if __name__=='__main__':
-#     s = np.array(np.random.rand(684, 684))
-#     k = 1
-#     Xlearn = np.array(np.random.rand(684, 800))
-#
-#     trknnA = np.full(591, 1)
-#     testexsB = np.full(498, 1)
-#
-#     xA = np.array(np.random.rand(795, 800))
-#     xB = np.array(np.random.rand(498, 800))
-#
-#     yA = np.full(795, 1)
-#     yB = np.full(498, 1)
-#
-#     print(asymmetricKNN(xA[trknnA, :], yA[trknnA], xB[testexsB, :], yB[testexsB], Xlearn, s, k))
-#
-#
