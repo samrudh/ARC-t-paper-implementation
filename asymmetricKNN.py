@@ -6,27 +6,29 @@ Performs KNN based classification on asymmetric test and training data
 import numpy as np
 from helper import formKernel
 
+import scipy.io as sio
+
 
 def kernelKNN (Ytrain, Ktrain_test, nKtrain, nKtest, k):
-    Ktrain_test = Ktrain_test.T;
-
+    
+   # Ktrain_test = Ktrain_test.T
     # compute distance
-    (rows, cols) = Ktrain_test.shape
+    rows, cols = Ktrain_test.shape
     distMatrix = np.zeros((rows, cols), 'float64');
-    for i in range(0,rows-1):
-        for j in range(0,cols-1):
+    for i in range(rows):
+        for j in range(cols):
             distMatrix[i,j] = nKtest[i] + nKtrain[j] - 2 * Ktrain_test[i, j];
 
-    indices = np.argsort(distMatrix, axis=0);
+    indices = np.argsort(distMatrix, axis=1);
     preds = np.zeros(rows,"int64");
 
-    for i in range(0, rows):
-        counts = np.zeros(31);
-        for j in range(0, k):
-            if Ytrain[indices[i,j]] > np.count_nonzero(counts):
-                counts[Ytrain[indices[i,j]]] = 1;
+    for i in range(rows):
+        counts = np.zeros(32);
+        for j in range(k):
+            if Ytrain[0, indices[i,j]] > np.count_nonzero(counts):
+                counts[Ytrain[0,indices[i,j]]] = 1;
             else:
-                counts[Ytrain[indices[i,j]]] = counts[Ytrain[indices[i,j]]] + 1;
+                counts[Ytrain[0,indices[i,j]]] = counts[Ytrain[0,indices[i,j]]] + 1;
         preds[i] = np.argmax(counts)
     return preds
 
@@ -40,6 +42,12 @@ def asymmetricKNN(Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k):
 
     # Features were combined together while learning S
     # optimised L matrix (represented as s)
+    
+    
+    
+    ##debug
+#    Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k = X1,y1,X2,y2,Xlearn,S,1
+    #
     if s is None:
         raise Exception('\'s\' is not defined');
     Ktrain_test  = formKernel(Xtrain, Xtest)
@@ -49,9 +57,13 @@ def asymmetricKNN(Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k):
     Ktrain_test = Ktrain_test + Ktrain_learn  @ s @ Ktest_learn.T
     nKtest = np.ones((Xtest.shape[0],1), 'float64');
     nKtrain = np.ones((Xtrain.shape[0],1), 'float64');
+    
+    #save variables for matlab
+    result_dict = {'cm1': Ytrain, 'cm2': Ktrain_test, 'cm3': nKtrain, 'cm4': nKtest, 'cm5': k}
+    sio.savemat("kernel_knn.mat" , result_dict) 
 
     # call knn
-    predLabels = kernelKNN(Ytrain, Ktrain_test, nKtrain, nKtest, k);
+    predLabels = kernelKNN(Ytrain, Ktrain_test.T, nKtrain, nKtest, k);
     # compute accuracy
     numRight = np.sum(predLabels == Ytest)
     acc  = numRight / len(predLabels);

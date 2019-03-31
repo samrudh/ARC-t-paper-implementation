@@ -54,32 +54,14 @@ S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 #params.S = S
 Xlearn = X[indices,:]
 
-matlab_inputs_asymmetric = sio.loadmat(r"input_asymmetri_transform.mat")
-testexsA = matlab_inputs_asymmetric['testexsA']
-testexsB = matlab_inputs_asymmetric['testexsB']
-trexsA = matlab_inputs_asymmetric['trexsA']
-trexsB = matlab_inputs_asymmetric['trexsB']
-trknnA = matlab_inputs_asymmetric['trknnA']
-
-# Adjusting index by subtracting 1
-testexsB = [[y - 1 for y in x] for x in testexsB];
-trknnA = [[y - 1 for y in x] for x in trknnA];
-
-X1 = matlab_inputs_asymmetric['XA']
-y1 = matlab_inputs_asymmetric['yA'].reshape(-1)
-X2 = matlab_inputs_asymmetric['XB']
-y2 = matlab_inputs_asymmetric['yB'].reshape(-1)
+matlab_inputs_knn = sio.loadmat("knn_matlab_input_data.mat")
+X1 = matlab_inputs_knn['out_XA']
+y1 = matlab_inputs_knn['out_yA']
+X2 = matlab_inputs_knn['out_XB']
+y2 = matlab_inputs_knn['out_yB']
 
 ## KNN code Umesh
-asymmetricKNN.asymmetricKNN(X1[trknnA],y1[trknnA],X2[testexsB],y2[testexsB],Xlearn,S,1);
-
-# Xtrain = X1[trknnA]
-# Ytrain= y1[trknnA]
-# Xtest = X2[testexsB];
-# Ytest = y2[testexsB];
-# s =S
-# k =1
-#
+asymmetricKNN.asymmetricKNN(X1,y1,X2,y2,Xlearn,S,1);
 
 
 
