@@ -8,7 +8,6 @@ from helper import formKernel
 
 
 def kernelKNN (Ytrain, Ktrain_test, nKtrain, nKtest, k):
-    Ktrain_test = Ktrain_test.T;
 
     # compute distance
     (rows, cols) = Ktrain_test.shape
@@ -18,7 +17,7 @@ def kernelKNN (Ytrain, Ktrain_test, nKtrain, nKtest, k):
             distMatrix[i,j] = nKtest[i] + nKtrain[j] - 2 * Ktrain_test[i, j];
 
     indices = np.argsort(distMatrix, axis=1);
-    preds = np.zeros(rows,"int");
+    preds = np.zeros(rows,"int")
 
     for i in range(0, rows):
         counts = np.zeros(32);
@@ -51,9 +50,9 @@ def asymmetricKNN(Xtrain, Ytrain, Xtest, Ytest, Xlearn, s, k):
     nKtrain = np.ones(Xtrain.shape[0], 'int');
 
     # call knn
-    predLabels = kernelKNN(Ytrain, Ktrain_test, nKtrain, nKtest, k);
+    predLabels = kernelKNN(Ytrain, Ktrain_test.T, nKtrain, nKtest, k);
     # compute accuracy
     numRight = np.sum(predLabels == Ytest)
-    acc  = numRight / len(predLabels);
-    print ("Matching completed with accuracy of "+ str(acc*100) +" %")
+    acc = numRight / len(predLabels);
+    print ("Asymmetric Matching completed with accuracy of " + str(acc*100) +" %")
     return acc;

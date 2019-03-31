@@ -6,7 +6,9 @@ Learning asymmetric transform
 import numpy as np
 import math
 import helper
-import asymmetricKNN;
+import asymmetricKNN
+import symmetricKNN
+
 
 class Params():
     def __init__(self):
@@ -58,46 +60,30 @@ C, indices = helper.getConstraints_InterdomainSimilarity(yA_learn,yB_learn,l,u)
 
 S, slack  = helper.asymmetricFrob_slack_kernel(K0train, C)
 
+'''
+Code for Asymmetric transform
 
-## start coding from here
-### use
-#params.S = S
+# For Debug purpose  only
+Xtrain = XA[trknnA,:]
+Ytrain= yA[trknnA]
+Xtest = XB[testexsB,:]
+Ytest = yB[testexsB]
+s = S
+k = 1
+'''
 Xlearn = X[indices,:]
 
 ## KNN code Umesh
 asymmetricKNN.asymmetricKNN(XA[trknnA,:],yA[trknnA],XB[testexsB,:],yB[testexsB],Xlearn,S,1);
 
+'''
+Code for Symmetric knn where classification is done for target using source
 # For Debug purpose  only
-# Xtrain = XA[trknnA,:]
-# Ytrain= yA[trknnA]
-# Xtest = XB[testexsB,:]
-# Ytest = yB[testexsB]
-# s =S
-# k =1
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#if __name__=='__main__':
-#
-#    params = Params()
-#
-#    xA = np.random.rand(591,800)
-#    xB = np.random.rand(93,800)
-#
-#    yA = np.array([1]*591)
-#    yB = np.array([1] * 93)
-#
-#    print(learnAymmTransform(xA, yA, xB, yB, params))
-
+Xtrain = XA[trknnA,:]
+Ytrain= yA[trknnA]
+Xtest = XB[testexsB,:]
+Ytest = yB[testexsB]
+k = 1
+'''
+symmetricKNN.symmetricKNN(XA[trknnA,:],yA[trknnA],XB[testexsB,:],yB[testexsB],1);
 
