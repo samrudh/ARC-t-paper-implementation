@@ -47,13 +47,13 @@ def getConstraints_InterdomainSimilarity(y1,y2,l,u):
     return C, indices
 
 
-def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01):
+def  asymmetricFrob_slack_kernel(K0,C,gamma=100,thresh=0.01, iterations=5000):
     
 #    debug
 #    K0,C, gamma, thresh=K0train, C , 100, 0.01
 ##   debug
     
-    maxit = 1000
+    maxit = iterations
     n, _ = K0.shape
     S = np.zeros(K0.shape)
     c, t = C.shape
