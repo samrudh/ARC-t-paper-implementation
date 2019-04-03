@@ -7,7 +7,10 @@ import numpy as np
 import math
 import helper
 import asymmetricKNN;
+
 from os import path
+import symmetricKNN;
+
 class Params():
     def __init__(self):
         pass
@@ -74,6 +77,8 @@ for config_file in config_files:
     
     
 
+##
+symmetricKNN.symmetricKNN(X1,y1,X2,y2,Xlearn,S,1);
 
 ## SVM code Samrudha
 ##asymmetricKNN.asymmetricSVM(X1,y1,X2,y2,Xlearn,S,1);
