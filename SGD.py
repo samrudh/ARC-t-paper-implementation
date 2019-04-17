@@ -40,10 +40,10 @@ def SGD(K0,C,gamma=100,thresh=0.01, iterations=100):
          t2 = ( + K0[p1, p1] * K0[p2, p2])
          t = t1 / t2
          #cost,d_weight=derivative(C,weights)
-         weights=weights-lr*d_weight
-         weights[p1, p2] = weights[p1, p2] - lr * alpha
          
-         return weightS
+         weights[p1, p2] = weights[p1, p2] - lr * t
+         
+         return weights
 ###
 
 
