@@ -42,8 +42,8 @@ def SGD(K0,C,gamma=100,thresh=0.01, iterations=100):
          #cost,d_weight=derivative(C,weights)
          weights=weights-lr*d_weight
          weights[p1, p2] = weights[p1, p2] - lr * alpha
-         print(cost)
-         return cost,d_weight
+         
+         return weightS
 ###
 
 
